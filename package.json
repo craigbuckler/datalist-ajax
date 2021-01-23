@@ -1,0 +1,29 @@
+{
+  "name": "datalist-ajax",
+  "version": "1.0.0",
+  "description": "Auto-complete using REST calls and lightweight HTML5 datalist elements.",
+  "type": "module",
+  "browser": "./dist/datalist-ajax.min.js",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "build": "rollup --config --environment NODE_ENV:production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/craigbuckler/datalist-ajax.git"
+  },
+  "homepage": "https://github.com/craigbuckler/datalist-ajax#readme",
+  "bugs": {
+    "url": "https://github.com/craigbuckler/datalist-ajax/issues"
+  },
+  "keywords": [
+    "HTML5",
+    "datalist",
+    "autocomplete",
+    "REST"
+  ],
+  "author": "Craig Buckler",
+  "license": "MIT"
+}

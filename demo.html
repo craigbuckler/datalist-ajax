@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>HTML5 Ajax auto-complete datalist demonstration</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<script type="module" src="./dist/datalist-ajax.min.js"></script>
+<style>
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+  font-size: 100%;
+  color: #222;
+  background-color: #fafafe;
+  margin: 1em;
+}
+
+label, button {
+  display: block;
+  margin-top: 1em;
+}
+</style>
+</head>
+<body>
+
+  <h1>HTML5 Ajax auto-complete datalist demonstration</h1>
+
+  <form id="autoform">
+
+    <label for="country">country lookup:</label>
+
+    <auto-complete
+      api="https://restcountries.eu/rest/v2/name/${country}?fields=name;alpha2Code;region"
+      resultname="name"
+      querymin="2"
+      optionmax="50"
+      valid="please select a valid country"
+    >
+      <input type="text" id="country" name="country" size="50" required />
+    </auto-complete>
+
+    <label for="region">country region:</label>
+    <input type="text" id="region" name="region" size="10" data-autofill="region" readonly />
+
+    <label for="countrycode">country code:</label>
+    <input type="text" id="countrycode" name="countrycode" data-autofill="alpha2Code" size="2" readonly />
+
+    <label for="artist">music artist lookup:</label>
+
+    <auto-complete
+      api="https://musicbrainz.org/ws/2/artist?query=artist:${artist}%20AND%20country:${countrycode}&limit=21&fmt=json"
+      resultdata="artists"
+      resultname="name"
+      querymin="1"
+      optionmax="100"
+    >
+      <input type="text" id="artist" name="artist" size="50" required />
+    </auto-complete>
+
+    <label for="artisttype">artist type:</label>
+    <input type="text" id="artisttype" name="artisttype" data-autofill="type" size="10" readonly />
+
+    <button type="submit">submit</button>
+
+  </form>
+
+<script type="module">
+(() => {
+
+  // stop form submission and output field names/values to console
+  const form = document.getElementById('autoform');
+
+  form.addEventListener('submit', e => {
+
+    e.preventDefault();
+    console.log('Submit disabled. Data:');
+
+    const data = new FormData(form);
+    for (let nv of data.entries()) {
+      console.log(`  ${ nv[0] }: ${ nv[1] }`);
+    }
+
+  });
+
+})();
+</script>
+</body>
+</html>
