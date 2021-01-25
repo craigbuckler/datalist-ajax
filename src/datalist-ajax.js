@@ -130,7 +130,7 @@ class AutoComplete extends HTMLElement {
   disconnectedCallback() {
 
     this.input.removeEventListener('input', this.inputHandler);
-    this.input.removeEventListener('blur', this.blurHandler);
+    this.input.removeEventListener('blur', this.changeHandler);
     this.input.removeAttribute('list');
     this.datalist.remove();
 

@@ -43,8 +43,8 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 |attribute|description|
 |-:|-|
 |`api`|REST URL (required)|
-|`resultdata`|the property name of the API data array (optional)|
-|`resultname`|the property name of the data value (required)|
+|`resultdata`|the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)|
+|`resultname`|the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (required)|
 |`querymin`|the minimum number of characters to enter before a search occurs (default: 1)|
 |`inputdelay`|the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)|
 |`optionmax`|the maximum number of auto-complete options to show (default: 20)|
