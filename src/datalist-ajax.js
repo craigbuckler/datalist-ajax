@@ -111,7 +111,7 @@ class AutoComplete extends HTMLElement {
       let reset = {};
       for (const name in data) {
 
-        Array.from(this.input.form.querySelectorAll(`[data-autofill="${ name }"]`)).forEach(f => {
+        Array.from(this.input.form.querySelectorAll(`[data-autofill="${name}"]:not([data-autofill-source]), [data-autofill="${name}"][data-autofill-source="${(this.input.name || this.input.id)}"]`)).forEach(f => {
           f.value = data[name] || '';
           reset[name] = '';
         });
