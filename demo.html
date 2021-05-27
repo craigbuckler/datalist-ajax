@@ -51,6 +51,7 @@ label, button {
     <label for="artist">music artist lookup:</label>
 
     <auto-complete
+      id="artistauto"
       api="https://musicbrainz.org/ws/2/artist?query=artist:${artist}%20AND%20country:${countrycode}&limit=21&fmt=json"
       resultdata="artists"
       resultname="name"
@@ -61,7 +62,7 @@ label, button {
     </auto-complete>
 
     <label for="artisttype">artist type:</label>
-    <input type="text" id="artisttype" name="artisttype" data-autofill="type" size="10" readonly />
+    <input type="text" id="artisttype" name="artisttype" data-autofill="artistauto.type" size="10" readonly />
 
     <button type="submit">submit</button>
 
