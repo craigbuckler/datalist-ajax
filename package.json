@@ -1,6 +1,6 @@
 {
   "name": "datalist-ajax",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Auto-complete using REST calls and lightweight HTML5 datalist elements.",
   "type": "module",
   "browser": "./dist/datalist-ajax.min.js",

@@ -28,6 +28,7 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 <label for="country">country lookup:</label>
 
 <auto-complete
+  id="countryauto"
   api="https://restcountries.eu/rest/v2/name/${country}?fields=name;alpha2Code;region"
   resultname="name"
   querymin="2"
@@ -42,6 +43,7 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 
 |attribute|description|
 |-:|-|
+|`id`|optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs))|
 |`api`|REST URL (required)|
 |`resultdata`|the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)|
 |`resultname`|the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (required)|
@@ -130,6 +132,15 @@ For example, this hidden field will have its value set to `"2021-01-02"` when "s
 
 ```html
 <input type="hidden" name="date" data-autofill="date" />
+```
+
+In cases where two or more APIs return the same data names, `data-autofill` can be namespaced with the `id` assigned to a single `<auto-complete>`. In the following example, the `region` field can only be auto-filled by `region` data returned by the `<auto-complete>` with an `id` of `"countryauto"`. Any other API returning `region` data is ignored.
+
+```html
+<auto-complete id="countryauto" ...>
+</auto-complete>
+
+<input name="region" data-autofill="countryauto.region" />
 ```
 
 

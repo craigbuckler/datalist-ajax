@@ -10,6 +10,7 @@ The api attribute must be set to a REST API which receives JSON data.
 ${id} values are substituted with form values with the associated id.
 
 <auto-complete
+  id="optional-id"
   api="https://mysite/api/${query}"
   resultdata="dataset"
   resultname="id"
@@ -43,7 +44,7 @@ class AutoComplete extends HTMLElement {
   // component attributes
   static get observedAttributes() {
 
-    return ['api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid'];
+    return ['id', 'api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid'];
 
   }
 
@@ -111,7 +112,7 @@ class AutoComplete extends HTMLElement {
       let reset = {};
       for (const name in data) {
 
-        Array.from(this.input.form.querySelectorAll(`[data-autofill="${ name }"]`)).forEach(f => {
+        Array.from(this.input.form.querySelectorAll(`[data-autofill="${ name }"], [data-autofill="${ this.id }.${ name }"]`)).forEach(f => {
           f.value = data[name] || '';
           reset[name] = '';
         });
