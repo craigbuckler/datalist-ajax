@@ -46,7 +46,7 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 |`id`|optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs))|
 |`api`|REST URL (required)|
 |`resultdata`|the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)|
-|`resultname`|the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (required)|
+|`resultname`|the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (optional)|
 |`querymin`|the minimum number of characters to enter before a search occurs (default: 1)|
 |`inputdelay`|the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)|
 |`optionmax`|the maximum number of auto-complete options to show (default: 20)|
@@ -122,6 +122,25 @@ In this case:
 
 * the `resultdata` attribute must be set to `"resultset"` so the result array can be located
 * the `resultname` attribute must be set to `"name"` as before.
+
+
+### API JSON result example 3
+
+Another example:
+
+```json
+{
+  "SuggestionResult": [
+    "Doornikstraat, Lochristi",
+    "Doornikstraat, Oudenaarde",
+    "Doornikstraat, Brussel"
+  ]
+}
+
+In this case:
+
+* the `resultdata` attribute must be set to `"SuggestionResult"` so the result array can be located
+* the `resultname` attribute must be omited
 
 
 ### Auto-fill other inputs

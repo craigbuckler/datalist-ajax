@@ -181,7 +181,7 @@ class AutoComplete extends HTMLElement {
 
         for (let d = 0; d < data.length && optMax > 0; d++) {
 
-          const value = data[d][this.resultname];
+          const value = this.resultname ? data[d][this.resultname] : data[d];
 
           if (value && value.toLowerCase().includes(query)) {
             const option = document.createElement('option');
