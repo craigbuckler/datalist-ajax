@@ -172,7 +172,9 @@ class AutoComplete extends HTMLElement {
       .then(data => {
 
         if (!data) return;
-        data = (this.resultdata && data[this.resultdata]) || data;
+        if (this.resultdata) {
+          data = this.getNestedKeys(data, this.resultdata)
+        }
         data = Array.isArray(data) ? data : [ data ];
 
         // create fragment
@@ -224,6 +226,21 @@ class AutoComplete extends HTMLElement {
 
   }
 
+  getNestedKeys(obj, key) {
+      if (key in obj) {
+        return obj[key];
+      }
+      const keys = key.split(".");
+      let value = obj;
+      for (let i = 0; i < keys.length; i++) {
+        value = value[keys[i]];
+        if (value === undefined) {
+          break;
+        }
+      }
+
+      return value;
+    }
 
 }
 
