@@ -143,6 +143,25 @@ In this case:
 * the `resultdata` attribute must be set to `"SuggestionResult"` so the result array can be located
 * the `resultname` attribute must be omited
 
+### API JSON result example 4
+
+Example with deeply nested resultset:
+
+```json
+{
+  "_embedded": {
+    "companies": [
+      {"number": 1337, "name": "MakePlans"},
+      {"number": 9999, "name": "GitHub"}
+    ]
+  }
+}
+```
+
+In this case:
+
+* the `resultdata` attribute must be set to `"_embedded.compamies"` so the result array can be located
+* the `resultname` attribute must be set to `"name"` as before.
 
 ### Auto-fill other inputs
 
