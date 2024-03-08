@@ -118,6 +118,8 @@ class AutoComplete extends HTMLElement {
         });
 
       }
+      const event = new CustomEvent("autofill", {detail: data});
+      this.dispatchEvent(event);
 
       this.reset = reset;
 

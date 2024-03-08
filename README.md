@@ -182,6 +182,9 @@ In cases where two or more APIs return the same data names, `data-autofill` can 
 <input name="region" data-autofill="countryauto.region" />
 ```
 
+### Events
+
+The component emits an `autofill` event with the selected data in `detail`.
 
 ## Building
 
