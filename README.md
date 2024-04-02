@@ -52,7 +52,7 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 | `inputdelay` | the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)                            |
 |  `optionmax` | the maximum number of auto-complete options to show (default: 20)                                                                     |
 |      `valid` | if set, this error message is shown when an invalid value is selected                                                                 |
-|  `storekeys` | if set, these datadfields are addet as custom attributes in the \<options\> of the datalist                                           |
+|  `storekeys` | if set to a comma-delimited list of result values, e.g. storekeys="id,name", the <options> element has associated [data- attributes](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) set which can be accessed by the dataset property.
 
 
 ### REST URL input identifiers
@@ -225,8 +225,8 @@ Result after script:
 ```html
 <input id="person" list="person_list">
 <datalist id='person_list'>
-	<option value='George Orwell' data_id='1984' data_born='1903-06-25'/>
-	<option value='Bruce Wayne' data_id='17' data_born='1939-05-27'/>
+	<option value='George Orwell' data-id='1984' data-born='1903-06-25'/>
+	<option value='Bruce Wayne' data-id='17' data-born='1939-05-27'/>
 	<option value='Nobody' data_id='0' />
 </datalist>
 ```

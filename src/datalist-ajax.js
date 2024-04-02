@@ -188,10 +188,11 @@ class AutoComplete extends HTMLElement {
           const value = this.resultname ? data[d][this.resultname] : data[d];
           const res = [];
           if (this.storekeys){
-              let keys = this.storekeys.split(',');
+              let keys = this.storekeys.split(',').map(e=>e.trim());
               for (let k of keys) {
-                  if (k in data[d]){
-                    res[k] = data[d][k];
+                  let s_val = this.getNestedKeys(data[d], k)
+                  if (s_val !== undefined){
+                    res[k] = s_val;
                   }
               }
           }
@@ -200,7 +201,7 @@ class AutoComplete extends HTMLElement {
             const option = document.createElement('option');
             option.value = value;
             for (let k in res){
-                option.setAttribute("data_"+k, res[k]);
+                option.setAttribute("data-"+k, res[k]);
             }
             frag.appendChild(option);
             optMax--;
