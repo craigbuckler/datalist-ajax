@@ -44,7 +44,7 @@ class AutoComplete extends HTMLElement {
   // component attributes
   static get observedAttributes() {
 
-    return ['id', 'api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid'];
+    return ['id', 'api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid','storekeys'];
 
   }
 
@@ -78,7 +78,7 @@ class AutoComplete extends HTMLElement {
     this.input = this.firstElementChild;
     if (!this.input) return;
 
-    const listId = (this.input.name || this.input.id) + 'list';
+    const listId = (this.input.name || this.input.id) + '_list';
 
     // append datalist
     const list = document.createElement('datalist');
@@ -186,10 +186,23 @@ class AutoComplete extends HTMLElement {
         for (let d = 0; d < data.length && optMax > 0; d++) {
 
           const value = this.resultname ? data[d][this.resultname] : data[d];
+          const res = [];
+          if (this.storekeys){
+              let keys = this.storekeys.split(',').map(e=>e.trim());
+              for (let k of keys) {
+                  let s_val = this.getNestedKeys(data[d], k)
+                  if (s_val !== undefined){
+                    res[k] = s_val;
+                  }
+              }
+          }
 
           if (value && value.toLowerCase().includes(query)) {
             const option = document.createElement('option');
             option.value = value;
+            for (let k in res){
+                option.setAttribute("data-"+k, res[k]);
+            }
             frag.appendChild(option);
             optMax--;
           }

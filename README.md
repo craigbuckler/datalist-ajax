@@ -34,6 +34,7 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
   querymin="2"
   optionmax="50"
   valid="please select a valid country"
+  storekeys="key1,key2"
 >
   <input type="text" id="country" name="country" size="50" required />
 </auto-complete>
@@ -41,16 +42,17 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 
 `<auto-complete>` attributes:
 
-|attribute|description|
-|-:|-|
-|`id`|optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs))|
-|`api`|REST URL (required)|
-|`resultdata`|the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)|
-|`resultname`|the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (optional)|
-|`querymin`|the minimum number of characters to enter before a search occurs (default: 1)|
-|`inputdelay`|the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)|
-|`optionmax`|the maximum number of auto-complete options to show (default: 20)|
-|`valid`|if set, this error message is shown when an invalid value is selected|
+|    attribute | description                                                                                                                           |
+| -----------: | ------------------------------------------------------------------------------------------------------------------------------------- |
+|         `id` | optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs))                            |
+|        `api` | REST URL (required)                                                                                                                   |
+| `resultdata` | the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)    |
+| `resultname` | the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (optional) |
+|   `querymin` | the minimum number of characters to enter before a search occurs (default: 1)                                                         |
+| `inputdelay` | the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)                            |
+|  `optionmax` | the maximum number of auto-complete options to show (default: 20)                                                                     |
+|      `valid` | if set, this error message is shown when an invalid value is selected                                                                 |
+|  `storekeys` | if set to a comma-delimited list of result values, e.g. storekeys="id,name", the <options> element has associated [data- attributes](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) set which can be accessed by the dataset property.
 
 
 ### REST URL input identifiers
@@ -186,6 +188,52 @@ In cases where two or more APIs return the same data names, `data-autofill` can 
 
 The component emits an `autofill` event with the selected data in `detail`.
 
+### Storekeys: get more data from json
+
+If set additional data from the query result is filled to the \<option\> tag of the underlying datalist:
+
+Query result:
+```json
+[
+  {
+    "name": "George Orwell",
+    "id": "1984",
+    "born": "1903-06-25"
+  },
+  {
+    "name": "Bruce Wayne",
+    "id": "17",
+    "born": "1939-05-27",
+    "foo": "bar"
+  },
+  {
+    "name": "Nobody",
+    "id": "0"
+  }
+]
+```
+
+html:
+
+```html
+<auto-complete storekeys='id,born' resultname='name' ...>
+<input id="person" />
+</auto-complete>
+```
+
+Result after script:
+```html
+<input id="person" list="person_list">
+<datalist id='person_list'>
+	<option value='George Orwell' data-id='1984' data-born='1903-06-25'/>
+	<option value='Bruce Wayne' data-id='17' data-born='1939-05-27'/>
+	<option value='Nobody' data_id='0' />
+</datalist>
+```
+
+By this you can pick the data afterwards...
+
+
 ## Building
 
 The minified script is built using [Rollup.js](https://rollupjs.org/) and [Terser](https://terser.org/). Install globally:
@@ -205,3 +253,4 @@ Build using:
 ```bash
 npm run build
 ```
+
