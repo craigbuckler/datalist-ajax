@@ -44,7 +44,7 @@ class AutoComplete extends HTMLElement {
   // component attributes
   static get observedAttributes() {
 
-    return ['id', 'api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid'];
+    return ['id', 'api', 'resultdata', 'resultname', 'inputdelay', 'querymin', 'optionmax', 'valid', 'storekeys'];
 
   }
 
@@ -78,7 +78,7 @@ class AutoComplete extends HTMLElement {
     this.input = this.firstElementChild;
     if (!this.input) return;
 
-    const listId = (this.input.name || this.input.id) + 'list';
+    const listId = (this.input.name || this.input.id) + '_list';
 
     // append datalist
     const list = document.createElement('datalist');
@@ -109,7 +109,8 @@ class AutoComplete extends HTMLElement {
       this.input.checkValidity();
 
       // update linked values
-      let reset = {};
+      const reset = {};
+
       for (const name in data) {
 
         Array.from(this.input.form.querySelectorAll(`[data-autofill="${ name }"], [data-autofill="${ this.id }.${ name }"]`)).forEach(f => {
@@ -118,6 +119,10 @@ class AutoComplete extends HTMLElement {
         });
 
       }
+
+      // trigger event
+      const event = new CustomEvent('autofill', { detail: data });
+      this.dispatchEvent(event);
 
       this.reset = reset;
 
@@ -172,20 +177,35 @@ class AutoComplete extends HTMLElement {
       .then(data => {
 
         if (!data) return;
-        data = (this.resultdata && data[this.resultdata]) || data;
+        if (this.resultdata) {
+          data = this.getNestedKeys(data, this.resultdata);
+        }
         data = Array.isArray(data) ? data : [ data ];
 
         // create fragment
         const frag = document.createDocumentFragment();
         let optMax = this.optionmax;
 
-        for (let d = 0; d < data.length && optMax > 0; d++) {
+        for (let d = 0; d < data.length && optMax; d++) {
 
-          const value = this.resultname ? data[d][this.resultname] : data[d];
+          const value = this.resultname ? this.getNestedKeys(data[d], this.resultname) : data[d];
+          const res = [];
+          if (this.storekeys) {
+            const keys = this.storekeys.split(',').map(e => e.trim());
+            for (const k of keys) {
+              const s_val = this.getNestedKeys(data[d], k);
+              if (s_val !== undefined){
+                res[k] = s_val;
+              }
+            }
+          }
 
           if (value && value.toLowerCase().includes(query)) {
             const option = document.createElement('option');
             option.value = value;
+            for (const k in res){
+              option.setAttribute('data-' + k, res[k]);
+            }
             frag.appendChild(option);
             optMax--;
           }
@@ -220,10 +240,27 @@ class AutoComplete extends HTMLElement {
     const query = this.input.value.trim();
     if (!query || !this.lastQuery) return;
 
-    return this.cache[this.lastQuery].data.find(d => query === d[this.resultname]);
+    return this.cache[this.lastQuery].data.find(d => query === this.getNestedKeys(d, this.resultname));
 
   }
 
+  // find value of nested keys
+  getNestedKeys(obj, key) {
+
+    if (key in obj) return obj[key];
+
+    const keys = key.split('.');
+    let value = obj;
+    for (let i = 0; i < keys.length; i++) {
+      value = value[keys[i]];
+      if (value === undefined) {
+        break;
+      }
+    }
+
+    return value;
+
+  }
 
 }
 

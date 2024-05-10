@@ -4,13 +4,27 @@ An auto-complete module which implements Ajax REST calls and updates lightweight
 
 Load `demo.html` to view the demonstration page. This allows you to select a country (the form can only be submitted if a valid option is chosen). A music artist auto-complete then returns artists with names that match the search string who originated in the chosen country.
 
-* the country look-up API is provided by [restcountries.eu](https://restcountries.eu/#api-endpoints-name)
+* the country look-up API is provided by [restcountries.com](https://restcountries.com/)
 * the music artist look-up API is provided by [musicbrainz.org](https://musicbrainz.org/doc/MusicBrainz_API)
+
+**NOTE:** this started as demonstration code for the [SitePoint article "Lightweight Autocomplete Controls with the HTML5 Datalist"](https://www.sitepoint.com/html5-datalist-autocomplete/). Many developers found it useful and submitted suggestions and updates. You're welcome to use it at your own risk without 24/7 support!
+
+
+## Version history
+
+### 1.0.3: 10 May 2024
+
+Rollup of various updates including options to extract nested values, update data attributes, fix demonstration, and modify documentation.
+
+
+### 1.0.0: 23 January 2021
+
+Initial release.
 
 
 ## Usage
 
-Load the script anywhere in your HTML page as an ES6 module (2.6Kb):
+Load the script anywhere in your HTML page as an ES6 module (3Kb):
 
 ```html
 <script type="module" src="./dist/datalist-ajax.min.js"></script>
@@ -29,8 +43,8 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 
 <auto-complete
   id="countryauto"
-  api="https://restcountries.eu/rest/v2/name/${country}?fields=name;alpha2Code;region"
-  resultname="name"
+  api="https://restcountries.com/v3.1/name/${country}?fields=name,cca2,region"
+  resultname="name.common"
   querymin="2"
   optionmax="50"
   valid="please select a valid country"
@@ -42,17 +56,17 @@ Create an `<auto-complete>` element with a child `input` to use as the data-entr
 
 `<auto-complete>` attributes:
 
-|    attribute | description                                                                                                                           |
-| -----------: | ------------------------------------------------------------------------------------------------------------------------------------- |
-|         `id` | optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs))                            |
-|        `api` | REST URL (required)                                                                                                                   |
-| `resultdata` | the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned)    |
+| attribute | description |
+| -: | - |
+|         `id` | optional ID (only necessary when two or more controls could [auto-fill an input](#auto-fill-other-inputs)) |
+|        `api` | REST URL (required) |
+| `resultdata` | the name of the property containing a result array of objects in the returned API JSON (not required if only results are returned) |
 | `resultname` | the name of the property in each result object which matches the search input and is used for datalist `<option>` elements (optional) |
-|   `querymin` | the minimum number of characters to enter before a search occurs (default: 1)                                                         |
-| `inputdelay` | the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300)                            |
-|  `optionmax` | the maximum number of auto-complete options to show (default: 20)                                                                     |
-|      `valid` | if set, this error message is shown when an invalid value is selected                                                                 |
-|  `storekeys` | if set to a comma-delimited list of result values, e.g. storekeys="id,name", the <options> element has associated [data- attributes](https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/dataset) set which can be accessed by the dataset property.
+|   `querymin` | the minimum number of characters to enter before a search occurs (default: 1) |
+| `inputdelay` | the minimum time to wait in milliseconds between keypresses before a search occurs (default debounce: 300) |
+|  `optionmax` | the maximum number of auto-complete options to show (default: 20) |
+|      `valid` | if set, this error message is shown when an invalid value is selected |
+|  `storekeys` | if set to a comma-delimited list of result values, e.g. `storekeys="id,name"`, the <options> element has associated `data-` attributes defined which can be accessed by the [dataset property](https://developer.mozilla.org/docs/Web/API/HTMLElement/dataset).|
 
 
 ### REST URL input identifiers
@@ -94,7 +108,7 @@ In this case:
 
 ### API JSON result example 2
 
-Another example:
+Another example with nested values:
 
 ```json
 {
@@ -102,17 +116,17 @@ Another example:
   "query": "str",
   "resultset": [
     {
-      "name": "string one",
+      "name": { "full": "string one", "short": "one" },
       "type": "string",
       "date": "2021-01-01"
     },
     {
-      "name": "string two",
+      "name": { "full": "string two", "short": "two" },
       "type": "string",
       "date": "2021-01-02"
     },
     {
-      "name": "string three",
+      "name": { "full": "string three", "short": "three" },
       "type": "string",
       "date": "2021-01-03"
     }
@@ -123,7 +137,7 @@ Another example:
 In this case:
 
 * the `resultdata` attribute must be set to `"resultset"` so the result array can be located
-* the `resultname` attribute must be set to `"name"` as before.
+* the `resultname` attribute must be set to `"name.full"`.
 
 
 ### API JSON result example 3
@@ -143,18 +157,19 @@ Another example:
 In this case:
 
 * the `resultdata` attribute must be set to `"SuggestionResult"` so the result array can be located
-* the `resultname` attribute must be omited
+* the `resultname` attribute must be omitted
+
 
 ### API JSON result example 4
 
-Example with deeply nested resultset:
+Example with a deeply nested result set:
 
 ```json
 {
   "_embedded": {
     "companies": [
-      {"number": 1337, "name": "MakePlans"},
-      {"number": 9999, "name": "GitHub"}
+      { "number": 1337, "name": "MakePlans"},
+      { "number": 9999, "name": "GitHub"}
     ]
   }
 }
@@ -163,7 +178,8 @@ Example with deeply nested resultset:
 In this case:
 
 * the `resultdata` attribute must be set to `"_embedded.compamies"` so the result array can be located
-* the `resultname` attribute must be set to `"name"` as before.
+* the `resultname` attribute must be set to `"name"`.
+
 
 ### Auto-fill other inputs
 
@@ -186,13 +202,15 @@ In cases where two or more APIs return the same data names, `data-autofill` can 
 
 ### Events
 
-The component emits an `autofill` event with the selected data in `detail`.
+The component triggers an `autofill` event with the selected data in `detail`.
 
-### Storekeys: get more data from json
 
-If set additional data from the query result is filled to the \<option\> tag of the underlying datalist:
+### Populating `<option>` elements with data
+
+If set additional data from the query result is filled to the `<option>` tag of the underlying datalist:
 
 Query result:
+
 ```json
 [
   {
@@ -213,7 +231,7 @@ Query result:
 ]
 ```
 
-html:
+Initial HTML:
 
 ```html
 <auto-complete storekeys='id,born' resultname='name' ...>
@@ -221,36 +239,23 @@ html:
 </auto-complete>
 ```
 
-Result after script:
+HTML after population from REST API call:
+
 ```html
 <input id="person" list="person_list">
 <datalist id='person_list'>
-	<option value='George Orwell' data-id='1984' data-born='1903-06-25'/>
-	<option value='Bruce Wayne' data-id='17' data-born='1939-05-27'/>
+	<option value='George Orwell' data-id='1984' data-born='1903-06-25' />
+	<option value='Bruce Wayne' data-id='17' data-born='1939-05-27' />
 	<option value='Nobody' data_id='0' />
 </datalist>
 ```
 
-By this you can pick the data afterwards...
-
 
 ## Building
 
-The minified script is built using [Rollup.js](https://rollupjs.org/) and [Terser](https://terser.org/). Install globally:
+The minified script is built using [Rollup.js](https://rollupjs.org/) and [Terser](https://terser.org/). Install and build:
 
 ```bash
-npm install -g rollup rollup-plugin-terser
-```
-
-If not done already, set `NODE_PATH` to the `npm` root folder so global modules can be used within any project directory, e.g.
-
-```bash
-export NODE_PATH=$(npm root --quiet -g)
-```
-
-Build using:
-
-```bash
+npm i
 npm run build
 ```
-
