@@ -33,8 +33,8 @@ label, button {
     <label for="country">country lookup:</label>
 
     <auto-complete
-      api="https://restcountries.eu/rest/v2/name/${country}?fields=name;alpha2Code;region"
-      resultname="name"
+      api="https://restcountries.com/v3.1/name/${country}?fields=name,cca2,region"
+      resultname="name.common"
       querymin="2"
       optionmax="50"
       valid="please select a valid country"
@@ -46,7 +46,7 @@ label, button {
     <input type="text" id="region" name="region" size="10" data-autofill="region" readonly />
 
     <label for="countrycode">country code:</label>
-    <input type="text" id="countrycode" name="countrycode" data-autofill="alpha2Code" size="2" readonly />
+    <input type="text" id="countrycode" name="countrycode" data-autofill="cca2" size="2" readonly />
 
     <label for="artist">music artist lookup:</label>
 
