@@ -177,7 +177,7 @@ Example with a deeply nested result set:
 
 In this case:
 
-* the `resultdata` attribute must be set to `"_embedded.compamies"` so the result array can be located
+* the `resultdata` attribute must be set to `"_embedded.companies"` so the result array can be located
 * the `resultname` attribute must be set to `"name"`.
 
 
