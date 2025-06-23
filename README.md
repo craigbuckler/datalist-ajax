@@ -12,6 +12,12 @@ Load `demo.html` to view the demonstration page. This allows you to select a cou
 
 ## Version history
 
+### 1.0.4: 23 June 2025
+
+* autofill can reference child object and array values.
+
+* switched from Rollup to esbuild bundler.
+
 ### 1.0.3: 10 May 2024
 
 Rollup of various updates including options to extract nested values, update data attributes, fix demonstration, and modify documentation.
@@ -191,13 +197,15 @@ For example, this hidden field will have its value set to `"2021-01-02"` when "s
 <input type="hidden" name="date" data-autofill="date" />
 ```
 
-In cases where two or more APIs return the same data names, `data-autofill` can be namespaced with the `id` assigned to a single `<auto-complete>`. In the following example, the `region` field can only be auto-filled by `region` data returned by the `<auto-complete>` with an `id` of `"countryauto"`. Any other API returning `region` data is ignored.
+`data-autofill` can reference child object and array values such as `country[0].name.iso`.
+
+In cases where two or more APIs return the same data names, `data-autofill` can be namespaced with the `id` assigned to a single `<auto-complete>`. In the following example, the `region` field can only be auto-filled by `name.official` data returned by the `<auto-complete>` with an `id` of `"countryauto"`. Any other API returning `region` data is ignored.
 
 ```html
 <auto-complete id="countryauto" ...>
 </auto-complete>
 
-<input name="region" data-autofill="countryauto.region" />
+<input name="region" data-autofill="countryauto.name.official" />
 ```
 
 ### Events

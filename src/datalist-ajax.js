@@ -105,20 +105,34 @@ class AutoComplete extends HTMLElement {
       // validate query value
       const data = this.isValid() || this.reset || {};
 
-      this.input.setCustomValidity(data ? '' : this.valid);
+      this.input.setCustomValidity('');
       this.input.checkValidity();
 
       // update linked values
-      const reset = {};
+      const reset = {}, input = this.input, id = this.id;
 
-      for (const name in data) {
+      // recurse data values and populate autofill fields
+      function autofill(obj, path = '') {
 
-        Array.from(this.input.form.querySelectorAll(`[data-autofill="${ name }"], [data-autofill="${ this.id }.${ name }"]`)).forEach(f => {
-          f.value = data[name] || '';
-          reset[name] = '';
-        });
+        if (Array.isArray(obj)) {
+          obj.forEach((v, i) => autofill(v, `${ path }[${ i }]`));
+        }
+        else if (typeof obj === 'object') {
+          for (const k in obj) {
+            autofill(obj[k], `${ path + (path ? '.' : '') }${ k }`);
+          }
+        }
+        else {
+
+          Array.from(input.form.querySelectorAll(`[data-autofill="${ path }"], [data-autofill^="${ id }.${ path }"]`)).forEach(f => {
+            f.value = String(obj) || '';
+            reset[path] = '';
+          });
+        }
 
       }
+
+      autofill(data);
 
       // trigger event
       const event = new CustomEvent('autofill', { detail: data });
