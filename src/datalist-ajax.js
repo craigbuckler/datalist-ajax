@@ -105,7 +105,7 @@ class AutoComplete extends HTMLElement {
       // validate query value
       const data = this.isValid() || this.reset || {};
 
-      this.input.setCustomValidity('');
+      this.input.setCustomValidity(data ? '' : this.valid);
       this.input.checkValidity();
 
       // update linked values
